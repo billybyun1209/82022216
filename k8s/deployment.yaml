@@ -1,20 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-api
+  name: user-deployment
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: my-api
+      app: user-app
   template:
     metadata:
       labels:
-        app: my-api
+        app: user-app
     spec:
       containers:
-        - name: my-api
-          image: cepgstapacr.azurecr.io/82022216:latest
+        - name: user-container
+          image: cepgbaseacr.azurecr.io/your-image:latest
           ports:
             - containerPort: 8080
-      

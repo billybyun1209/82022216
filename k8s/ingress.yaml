@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: my-api-ingress
+  name: user-ingress
 spec:
   rules:
     - host: sampleapp1-82022216.ce-aa.kubepia.net
@@ -11,6 +11,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: my-api-service
+                name: user-service
                 port:
                   number: 8080
