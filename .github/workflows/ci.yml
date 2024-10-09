@@ -2,33 +2,32 @@ name: CI
 
 on:
   push:
-     branches:
-      - main  # main 브랜치에 푸시될 때 CI를 실행
+    branches:
+      - main
+      - dev
   pull_request:
     branches:
-      - main  # main 브랜치에 대한 PR 생성 시 CI를 실행
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Log in to ACR
-        uses: docker/login-action@v1
         with:
-          registry: cepgbaseacr.azurecr.io
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
+          fetch-depth: 0  # 모든 커밋을 가져오고 풀 리퀘스트의 변경 사항을 확인할 수 있도록 설정
 
-      - name: Build and push
-        uses: docker/build-push-action@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          context: .
-          file: Dockerfile
-          push: true
-          tags: cepgbaseacr.azurecr.io/your-image:latest
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      # 필요에 따라 추가적인 단계 추가
