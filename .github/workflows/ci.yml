@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+     branches:
+      - main  # main 브랜치에 푸시될 때 CI를 실행
+  pull_request:
+    branches:
+      - main  # main 브랜치에 대한 PR 생성 시 CI를 실행
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to ACR
+        uses: docker/login-action@v1
+        with:
+          registry: cepgbaseacr.azurecr.io
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: cepgbaseacr.azurecr.io/your-image:latest
